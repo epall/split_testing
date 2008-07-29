@@ -1,1 +1,3 @@
 # SplitTesting
+module SplitTesting
+end
