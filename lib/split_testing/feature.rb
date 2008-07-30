@@ -1,9 +1,9 @@
 module SplitTesting
   class Feature < ActiveRecord::Base
-    def enable
+    def enable!
       self.update_attribute('enabled', true)
     end
-    def disable
+    def disable!
       self.update_attribute('enabled', false)
     end
   end
