@@ -24,4 +24,6 @@ This gives you two methods to use for enabling and disabling features on a per-u
     > User.find(:first).enable_tester('myfeature')
     > User.find(:first).disable_tester('myfeature')
 
+If current_user is defined such that the `FeatureHelper` can call it, then the current user will be checked for tester access on top of the checking for whether the feature is enabled.
+
 Copyright (c) 2008 Eric Allen, released under the MIT license
