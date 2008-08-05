@@ -13,6 +13,8 @@ module SplitTesting
           include SplitTesting::Acts::Tester::InstanceMethods
           SplitTesting::Feature.send :has_many, :testers, {:through => :feature_testers, :class_name => self.name}
           SplitTesting::FeatureTester.send :belongs_to, :tester, {:class_name => self.name}
+          SplitTesting::Role.send :has_and_belongs_to_many, :testers, {:class_name => self.name}
+          has_and_belongs_to_many :roles, :class_name => 'SplitTesting::Role', :join_table => 'roles_testers', :foreign_key => 'tester_id'
         end
       end
       
@@ -41,8 +43,9 @@ module SplitTesting
           return false if feature.nil?
           
           feature_tester = feature.feature_testers.find(:first, :conditions => {:tester_id => self.id})
+          return true if feature_tester && feature_tester.enabled?
           
-          return feature_tester && feature_tester.enabled?
+          return !roles.find(:all, :include => [:features]).find_all{|r| r.features.include?(feature)}.empty?
         end
       end
     end
