@@ -3,22 +3,16 @@ module SplitTesting
     module Tester
       def self.included(mod)
         mod.extend(ClassMethods)
-        SplitTesting::Feature.send :has_many, :testers, {:through => :feature_testers, :class_name => mod.name}
-        SplitTesting::FeatureTester.send :belongs_to, :tester, {:class_name => mod.name}
       end
       
       module ClassMethods
         def acts_as_tester
-          extend SplitTesting::Acts::Tester::SingletonMethods
           include SplitTesting::Acts::Tester::InstanceMethods
           SplitTesting::Feature.send :has_many, :testers, {:through => :feature_testers, :class_name => self.name}
           SplitTesting::FeatureTester.send :belongs_to, :tester, {:class_name => self.name}
           SplitTesting::Role.send :has_and_belongs_to_many, :testers, {:class_name => self.name}
           has_and_belongs_to_many :roles, :class_name => 'SplitTesting::Role', :join_table => 'roles_testers', :foreign_key => 'tester_id'
         end
-      end
-      
-      module SingletonMethods
       end
       
       module InstanceMethods
