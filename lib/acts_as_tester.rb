@@ -18,15 +18,15 @@ module SplitTesting
       module InstanceMethods
         def enable_tester(feature)
           feature = SplitTesting::Feature.find(:first, :conditions => {:name => feature.to_s})
-          featuretester = SplitTesting::FeatureTester.find(:first, :conditions => {:tester_id => self.id, :feature_id => feature.id})
-          featuretester ||= SplitTesting::FeatureTester.create(:tester => self, :feature => feature)
+          featuretester = feature.feature_testers.find(:first, :conditions => {:tester_id => self.id})
+          featuretester ||= feature.feature_testers.create(:tester => self)
           featuretester.enable!
         end
         
         def disable_tester(feature)
           feature = SplitTesting::Feature.find(:first, :conditions => {:name => feature.to_s})
-          featuretester = SplitTesting::FeatureTester.find(:first, :conditions => {:tester_id => self.id, :feature_id => feature.id})
-          featuretester ||= SplitTesting::FeatureTester.create(:tester => self, :feature => feature)
+          featuretester = feature.feature_testers.find(:first, :conditions => {:tester_id => self.id})
+          featuretester ||= feature.feature_testers.create(:tester => self)
           featuretester.disable!
         end
         
@@ -39,7 +39,7 @@ module SplitTesting
           feature_tester = feature.feature_testers.find(:first, :conditions => {:tester_id => self.id})
           return true if feature_tester && feature_tester.enabled?
           
-          return !roles.find(:all, :include => [:features]).find_all{|r| r.features.include?(feature)}.empty?
+          return !!roles.find(:all, :include => [:features]).detect {|r| r.features.include?(feature)}
         end
       end
     end
