@@ -11,7 +11,13 @@ To wall off a section of view code as a feature
 -----------------------------------------------
     <% feature :myfeature do -%>
     Super-cool beta feature
-    <% end %>
+    <% end #feature:myfeature -%>
+
+**NOTE:** the #feature:myfeature comment on the end tag is important for automatically stripping feature blocks out when you're cleaning up.
+
+To strip feature block when you no longer need to restrict a feature
+-----------------------------------------------
+    rake stripfeature FEATURE=myfeature
 
 To mark your user model as capable of testing features
 ------------------------------------------------------
